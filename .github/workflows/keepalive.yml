@@ -1,0 +1,23 @@
+name: Keep Alive
+
+on:
+  schedule:
+    - cron: '0 0 1,15 * *'   # 每月 1 号和 15 号跑一次
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Re-enable workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 把自己和需要保活的工作流都 enable 一遍
+          gh workflow enable keepalive.yml
+          # 如果有其他定时工作流，也写上，例如：
+          # gh workflow enable build.yml
+          # gh workflow enable deploy.yml
